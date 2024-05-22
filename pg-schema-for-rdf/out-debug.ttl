@@ -1,0 +1,25 @@
+@prefix gen: <http://schema.example.org/pgs-genmodel/>.
+@prefix socialgraph: <http://schema.example.org/socialgraph/>.
+@prefix g: <http://schema.example.org/graph/>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+<http://data.example.org/example-schema-socialgraph/node-type/personType> gen:iri socialgraph:PersonType.
+<http://data.example.org/example-schema-socialgraph/node-type/customerType> gen:iri socialgraph:CustomerType.
+socialgraph:PersonType a g:NodeType.
+socialgraph:PersonType a rdfs:Class.
+socialgraph:PersonType a sh:NodeShape.
+socialgraph:CustomerType a g:NodeType.
+socialgraph:CustomerType a rdfs:Class.
+socialgraph:CustomerType a sh:NodeShape.
+<http://data.example.org/example-schema-socialgraph/node-label/customer> gen:iri socialgraph:Customer.
+<http://data.example.org/example-schema-socialgraph/node-type/customerType> gen:requiredLabel socialgraph:Customer.
+socialgraph:Customer a rdfs:Class.
+socialgraph:CustomerType sh:property _:sk_0.
+_:sk_0 sh:path rdf:type.
+_:sk_0 sh:hasValue socialgraph:Customer.
+<http://data.example.org/example-schema-socialgraph/node-type/personType> gen:requiredLabel <http://schema.org/Person>.
+socialgraph:PersonType sh:property _:sk_1.
+_:sk_1 sh:path rdf:type.
+_:sk_1 sh:hasValue <http://schema.org/Person>.

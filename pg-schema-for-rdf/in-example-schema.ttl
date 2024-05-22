@@ -1,0 +1,57 @@
+BASE <http://data.example.org/example-schema-socialgraph/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX schemaorg: <http://schema.org/>
+PREFIX : <http://schema.example.org/pgs/>
+
+# CREATE GRAPH TYPE socialGraphType {
+#   ( personType : Person { name STRING , id INT }) ,
+#   ( customerType : Customer { customerId INT })
+# }
+
+<graph-type/socialGraphType> a :GraphType ;
+    :name "socialGraphType" ;
+    :namespace "http://schema.example.org/socialgraph/" .   # should have datatype 'xsd:anyURI', but that doesn't work for the log:namespace built-in used in filter-profile.n3
+
+<node-type/personType> a :NodeType ;
+    :name "PersonType" ;
+    :isPartOf <graph-type/socialGraphType> ;
+    
+    # 'Person' is an existing label re-used from schema.org
+    :hasRequiredLabel schemaorg:Person ;
+    
+    # 'name' is an existing property re-used from schema.org
+    :hasRequiredProperty [
+        :name "name" ;
+        :property schemaorg:name ;
+        :datatype xsd:string
+    ] ;
+
+    # 'identifier' is an existing property re-used from schema.org
+    :hasRequiredProperty [
+        :name "identifier" ;
+        :property schemaorg:identifier ;
+        :datatype xsd:integer
+    ] .
+
+<node-type/customerType> a :NodeType ;
+    :name "CustomerType" ;
+    :isPartOf <graph-type/socialGraphType> ;
+    
+    # 'Customer' is a local label that is scoped to 'socialGraphType'
+    :hasRequiredLabel <node-label/customer> ;
+    
+    # 'customerId' is a local property that is scoped to 'socialGraphType'
+    :hasRequiredProperty [
+        :name "customerId" ;
+        :property <property/customerId> ;
+        :datatype xsd:integer
+    ] .
+
+<node-label/customer> a :NodeLabel ;
+    :name "Customer" ;
+    :isPartOf <graph-type/socialGraphType> .
+
+<property/customerId> a :Property ;
+    :name "customerId" ;
+    :isPartOf <graph-type/socialGraphType> .

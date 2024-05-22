@@ -1,0 +1,118 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX string: <http://www.w3.org/2000/10/swap/string#>
+PREFIX log: <http://www.w3.org/2000/10/swap/log#>
+PREFIX : <http://schema.example.org/pgs/>
+PREFIX gen: <http://schema.example.org/pgs-genmodel/>
+PREFIX g: <http://schema.example.org/graph/>
+
+# Having this PREFIX declared here makes the generated 'out-profile.ttl' file more readable.
+# But it doesn't belong here, as it depends on the input data.
+PREFIX socialgraph: <http://schema.example.org/socialgraph/>
+
+#
+# Create IRI for the NodeType
+# 
+{
+  ?graphType a :GraphType ;
+    :namespace ?ns .
+
+  ?nodeType a :NodeType ;
+    :name ?nodeTypeName ;
+    :isPartOf ?graphType .
+
+  (?ns ?nodeTypeName) string:concatenation ?nTypeIriString .
+
+  ?nType log:uri ?nTypeIriString .
+}
+=>
+{
+    ?nodeType gen:iri ?nType .
+} .
+
+
+#
+# Declare the NodeType (synthetic Class & NodeShape)
+# 
+{
+  ?nodeType a :NodeType ;
+    gen:iri ?nType .
+}
+=>
+{
+    ?nType a g:NodeType, rdfs:Class, sh:NodeShape .
+} .
+
+
+#
+# Pre-Cook required labels. case:re-used existing labels
+#
+{
+  ?nodeType a :NodeType ;
+    :hasRequiredLabel ?nodeLabel .
+
+  [] log:notIncludes { ?nodeLabel a :NodeLabel } .
+}
+=>
+{
+  ?nodeType gen:requiredLabel ?nodeLabel .
+} .
+
+
+#
+# Pre-Cook required labels. case:local labels
+#
+{
+  ?nodeType a :NodeType ;
+    :isPartOf ?graphType ;
+    :hasRequiredLabel ?nodeLabel .
+
+  ?nodeLabel a :NodeLabel ;
+    :name ?nodeLabelName .
+
+  # for now, only consider nodeLabels that are part of the same graphType
+  ?nodeLabel :isPartOf ?graphType .
+   
+  ?graphType a :GraphType ;
+    :namespace ?ns .
+
+  (?ns ?nodeLabelName) string:concatenation ?nLabelIriString .
+
+  ?nLabel log:uri ?nLabelIriString .
+}
+=>
+{
+  ?nodeLabel gen:iri ?nLabel .
+  ?nodeType gen:requiredLabel ?nLabel .
+} .
+
+
+#
+# Transform local labels
+# 
+{
+  ?nodeLabel a :NodeLabel ;
+    gen:iri ?nLabel .
+}
+=>
+{
+    ?nLabel a rdfs:Class .
+} .
+
+
+#
+# Transform required labels
+#
+{
+  ?nodeType a :NodeType ;
+    gen:iri ?nType ;
+    gen:requiredLabel ?nLabel .
+}
+=>
+{
+  ?nType sh:property [
+	  sh:path rdf:type ;
+	  sh:hasValue ?nLabel
+	] .
+} .

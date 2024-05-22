@@ -1,0 +1,41 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX string: <http://www.w3.org/2000/10/swap/string#>
+PREFIX log: <http://www.w3.org/2000/10/swap/log#>
+PREFIX : <http://schema.example.org/pgs/>
+PREFIX gen: <http://schema.example.org/pgs-genmodel/>
+PREFIX g: <http://schema.example.org/graph/>
+
+# Having this PREFIX declared here makes the generated 'out-profile.ttl' file more readable.
+# But it doesn't belong here, as it depends on the input data.
+PREFIX socialgraph: <http://schema.example.org/socialgraph/>
+
+
+{
+  ?graphType a :GraphType ;
+    :namespace ?ns .
+
+  ?s log:namespace ?ns ;
+    ?p ?o .
+}
+=>
+{
+  ?s ?p ?o .
+} .
+
+
+{
+  ?graphType a :GraphType ;
+    :namespace ?ns .
+
+  ?nType log:namespace ?ns .
+  ?nType a g:NodeType ;
+    sh:property ?propertyShape .
+  
+  ?propertyShape ?p ?o .
+}
+=>
+{  
+  ?propertyShape ?p ?o .
+} .
