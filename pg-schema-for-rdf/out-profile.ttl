@@ -11,9 +11,25 @@ socialgraph:CustomerType a g:NodeType.
 socialgraph:CustomerType a rdfs:Class.
 socialgraph:CustomerType a sh:NodeShape.
 socialgraph:Customer a rdfs:Class.
+socialgraph:customerId a rdf:Property.
 socialgraph:CustomerType sh:property _:sk_0.
+socialgraph:PersonType sh:property _:sk_4.
+socialgraph:PersonType sh:property _:sk_5.
+socialgraph:CustomerType sh:property _:sk_6.
+_:sk_4 sh:path <http://schema.org/name>.
+_:sk_4 sh:datatype <http://www.w3.org/2001/XMLSchema#string>.
+_:sk_4 sh:minCount 1 .
+_:sk_4 sh:maxCount 1 .
+_:sk_5 sh:path <http://schema.org/identifier>.
+_:sk_5 sh:datatype <http://www.w3.org/2001/XMLSchema#integer>.
+_:sk_5 sh:minCount 1 .
+_:sk_5 sh:maxCount 1 .
 _:sk_0 sh:path rdf:type.
 _:sk_0 sh:hasValue socialgraph:Customer.
-socialgraph:PersonType sh:property _:sk_1.
-_:sk_1 sh:path rdf:type.
-_:sk_1 sh:hasValue <http://schema.org/Person>.
+_:sk_6 sh:path socialgraph:customerId.
+_:sk_6 sh:datatype <http://www.w3.org/2001/XMLSchema#integer>.
+_:sk_6 sh:minCount 1 .
+_:sk_6 sh:maxCount 1 .
+socialgraph:PersonType sh:property _:sk_7.
+_:sk_7 sh:path rdf:type.
+_:sk_7 sh:hasValue <http://schema.org/Person>.

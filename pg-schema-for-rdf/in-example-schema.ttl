@@ -22,16 +22,14 @@ PREFIX : <http://schema.example.org/pgs/>
     
     # 'name' is an existing property re-used from schema.org
     :hasRequiredProperty [
-        :name "name" ;
-        :property schemaorg:name ;
-        :datatype xsd:string
+        :rdfProperty schemaorg:name ;
+        :rdfDatatype xsd:string
     ] ;
 
     # 'identifier' is an existing property re-used from schema.org
     :hasRequiredProperty [
-        :name "identifier" ;
-        :property schemaorg:identifier ;
-        :datatype xsd:integer
+        :rdfProperty schemaorg:identifier ;
+        :rdfDatatype xsd:integer
     ] .
 
 <node-type/customerType> a :NodeType ;
@@ -43,9 +41,8 @@ PREFIX : <http://schema.example.org/pgs/>
     
     # 'customerId' is a local property that is scoped to 'socialGraphType'
     :hasRequiredProperty [
-        :name "customerId" ;
-        :property <property/customerId> ;
-        :datatype xsd:integer
+        :pgProperty <property/customerId> ;
+        :rdfDatatype xsd:integer
     ] .
 
 <node-label/customer> a :NodeLabel ;

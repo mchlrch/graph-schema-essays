@@ -44,7 +44,7 @@ PREFIX socialgraph: <http://schema.example.org/socialgraph/>
     ?nType a g:NodeType, rdfs:Class, sh:NodeShape .
 } .
 
-
+# ------------------------------------------------------
 #
 # Pre-Cook required labels. case:re-used existing labels
 #
@@ -116,3 +116,101 @@ PREFIX socialgraph: <http://schema.example.org/socialgraph/>
 	  sh:hasValue ?nLabel
 	] .
 } .
+
+
+# ------------------------------------------------------
+#
+# Pre-Cook required properties. case:re-used existing properties
+#
+{
+  ?nodeType a :NodeType ;
+    :hasRequiredProperty [
+      :rdfProperty ?rdfProperty ;
+      :rdfDatatype ?rdfDatatype
+    ] .
+}
+=>
+{
+  ?nodeType gen:requiredProperty [
+    gen:rdfProperty ?rdfProperty ;
+    gen:rdfDatatype ?rdfDatatype
+  ] .
+} .
+
+
+#
+# Pre-Cook required properties. case:local properties
+#
+{
+  ?nodeType a :NodeType ;
+    :isPartOf ?graphType ;
+    :hasRequiredProperty ?prop .
+
+  ?prop :pgProperty ?pgProperty ;
+    :rdfDatatype ?rdfDatatype .
+
+  ?pgProperty a :Property ;
+    :name ?pgPropertyName .
+
+  # for now, only consider PG-Properties that are part of the same graphType
+  ?pgProperty :isPartOf ?graphType .
+   
+  ?graphType a :GraphType ;
+    :namespace ?ns .
+
+  (?ns ?pgPropertyName) string:concatenation ?rdfPropertyIriString .
+
+  ?rdfProperty log:uri ?rdfPropertyIriString .
+}
+=>
+{
+  ?prop gen:iri ?rdfProperty .
+  
+  ?nodeType gen:requiredProperty [
+    gen:rdfProperty ?rdfProperty ;
+    gen:rdfDatatype ?rdfDatatype
+  ] .
+} .
+
+
+#
+# Transform local properties
+# 
+{
+  ?nodeType a :NodeType ;
+    :hasRequiredProperty ?prop .
+  
+  ?prop gen:iri ?rdfProperty .
+}
+=>
+{
+  ?rdfProperty a rdf:Property .
+} .
+
+
+#
+# Transform required properties
+#
+{
+  ?nodeType a :NodeType ;
+    gen:iri ?nType ;
+    gen:requiredProperty [
+      gen:rdfProperty ?rdfProperty ;
+      gen:rdfDatatype ?rdfDatatype
+    ] .
+}
+=>
+{
+  ?nType sh:property [
+	  sh:path ?rdfProperty ;
+	  sh:datatype ?rdfDatatype ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+	] .
+} .
+
+
+# ------------------------------------------------------
+#
+#
+#
