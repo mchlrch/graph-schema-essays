@@ -54,4 +54,4 @@ The input file *in-example-schema.ttl* has ...
 
 The following visualization shows what the resulting profile contains:
 
-![graphtype-as-resourcedescriptor](doc/graphtype-as-resourcedescriptor.png?raw=true "The generated profile looks like this ...")
+![graphtype-as-resourcedescriptor](doc/graphtype-as-resourcedescriptor.png "The generated profile looks like this ...")
