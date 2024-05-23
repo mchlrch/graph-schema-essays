@@ -13,8 +13,9 @@
 
 | PG-Schema | RDF | Comment |
 | --- | --- | --- |
-| GraphType | "Application-Profile" ?? |  |
+| GraphType | `prof:Profile` with `prof:ResourceDescriptor` | https://www.w3.org/TR/dx-prof/#conceptualmodel |
 | NodeType | `sh:NodeShape` & `rdfs:Class` | https://www.w3.org/TR/shacl/#implicit-targetClass |
+| NodeLabel | `rdfs:Class` | |
 
 * **What** is this node?
   * Q: semantics
@@ -25,7 +26,9 @@
 
 ### Design decisions
 
-- Use the GraphType as namespace for local scoped elements (eg. for labels, properties)
+- Keep PG-Schemas distinction between NodeLabel and NodeType
+- Use the GraphType as container and namespace for local scoped elements (eg. for labels, properties)
+
 
 ## Generating the profile
 
@@ -37,7 +40,18 @@ That image has all the necessary tools.
 docker run --rm -it -v $(pwd):/app zazukoians/node-java-jena:v5 ./build.sh
 ```
 
-The build generates two files, one filtered down to the triples of the resulting profile and one for debugging purposes:
+The build reads the input file *in-example-schema.ttl* and generates two files from it, one filtered down to the triples of the resulting profile and one for debugging purposes:
 
 - *out-profile.ttl*
 - *out-debug.ttl*
+
+
+## Scope of the example
+
+The input file *in-example-schema.ttl* has ...
+- One NodeType `PersonType` that is using RDF classes and RDF properties from existing ontology
+- One NodeType `CustomerType` that is introducing local classes and properties
+
+The following visualization shows what the resulting profile contains:
+
+![graphtype-as-resourcedescriptor](doc/graphtype-as-resourcedescriptor.png?raw=true "The generated profile looks like this ...")

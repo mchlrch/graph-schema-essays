@@ -1,6 +1,10 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX dcat:	<http://www.w3.org/ns/dcat#>
+PREFIX dct:	<http://purl.org/dc/terms/>
+PREFIX prof:	<http://www.w3.org/ns/dx/prof/>
+PREFIX role: <http://www.w3.org/ns/dx/prof/role/>
 PREFIX string: <http://www.w3.org/2000/10/swap/string#>
 PREFIX log: <http://www.w3.org/2000/10/swap/log#>
 PREFIX : <http://schema.example.org/pgs/>
@@ -11,6 +15,50 @@ PREFIX g: <http://schema.example.org/graph/>
 # But it doesn't belong here, as it depends on the input data.
 PREFIX socialgraph: <http://schema.example.org/socialgraph/>
 
+
+#
+# Create IRIs for the Profile and ResourceDescriptor
+# 
+{
+  ?graphType a :GraphType ;
+    :name ?graphTypeName ;
+    :namespace ?ns .
+
+  (?ns "profile/" ?graphTypeName) string:concatenation ?profileIriString .
+  (?ns "resource-descriptor/" ?graphTypeName) string:concatenation ?resourceDescriptorIriString .
+
+  ?profile log:uri ?profileIriString .
+  ?resourceDescriptor log:uri ?resourceDescriptorIriString .
+}
+=>
+{
+    ?graphType gen:profile ?profile ;
+      gen:resourceDescriptor ?resourceDescriptor .
+} .
+
+
+
+#
+# Declare the Profile and ResourceDescriptor
+#
+{
+  ?graphType a :GraphType ;
+    gen:profile ?profile ;
+    gen:resourceDescriptor ?resourceDescriptor .
+}
+=>
+{
+  ?profile a prof:Profile ;
+    prof:hasResource ?resourceDescriptor .
+    
+  ?resourceDescriptor a prof:ResourceDescriptor ;
+    dct:conformsTo <https://www.w3.org/TR/shacl/> ;
+    prof:hasRole role:Validation .
+} .
+
+
+
+# ------------------------------------------------------
 #
 # Create IRI for the NodeType
 # 
@@ -38,10 +86,13 @@ PREFIX socialgraph: <http://schema.example.org/socialgraph/>
 {
   ?nodeType a :NodeType ;
     gen:iri ?nType .
+  
+  ?nodeType!:isPartOf gen:resourceDescriptor ?resourceDescriptor .
 }
 =>
 {
     ?nType a g:NodeType, rdfs:Class, sh:NodeShape .
+    ?nType rdfs:isDefinedBy ?resourceDescriptor .
 } .
 
 # ------------------------------------------------------
@@ -89,15 +140,21 @@ PREFIX socialgraph: <http://schema.example.org/socialgraph/>
 
 
 #
-# Transform local labels
+# Declare local labels
 # 
 {
+  ?nodeType a :NodeType ;
+    :hasRequiredLabel ?nodeLabel .
+
   ?nodeLabel a :NodeLabel ;
     gen:iri ?nLabel .
+
+  ?nodeType!:isPartOf gen:resourceDescriptor ?resourceDescriptor .
 }
 =>
 {
     ?nLabel a rdfs:Class .
+    ?nLabel rdfs:isDefinedBy ?resourceDescriptor .
 } .
 
 
@@ -174,17 +231,20 @@ PREFIX socialgraph: <http://schema.example.org/socialgraph/>
 
 
 #
-# Transform local properties
+# Declare local properties
 # 
 {
   ?nodeType a :NodeType ;
     :hasRequiredProperty ?prop .
   
   ?prop gen:iri ?rdfProperty .
+
+  ?nodeType!:isPartOf gen:resourceDescriptor ?resourceDescriptor .
 }
 =>
 {
   ?rdfProperty a rdf:Property .
+  ?rdfProperty rdfs:isDefinedBy ?resourceDescriptor .
 } .
 
 

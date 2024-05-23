@@ -1,9 +1,14 @@
+@prefix prof: <http://www.w3.org/ns/dx/prof/>.
 @prefix socialgraph: <http://schema.example.org/socialgraph/>.
 @prefix g: <http://schema.example.org/graph/>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix sh: <http://www.w3.org/ns/shacl#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix role: <http://www.w3.org/ns/dx/prof/role/>.
 
+<http://schema.example.org/socialgraph/profile/socialGraphType> a prof:Profile.
+<http://schema.example.org/socialgraph/resource-descriptor/socialGraphType> a prof:ResourceDescriptor.
 socialgraph:PersonType a g:NodeType.
 socialgraph:PersonType a rdfs:Class.
 socialgraph:PersonType a sh:NodeShape.
@@ -12,6 +17,13 @@ socialgraph:CustomerType a rdfs:Class.
 socialgraph:CustomerType a sh:NodeShape.
 socialgraph:Customer a rdfs:Class.
 socialgraph:customerId a rdf:Property.
+<http://schema.example.org/socialgraph/profile/socialGraphType> prof:hasResource <http://schema.example.org/socialgraph/resource-descriptor/socialGraphType>.
+<http://schema.example.org/socialgraph/resource-descriptor/socialGraphType> dct:conformsTo <https://www.w3.org/TR/shacl/>.
+<http://schema.example.org/socialgraph/resource-descriptor/socialGraphType> prof:hasRole role:Validation.
+socialgraph:PersonType rdfs:isDefinedBy <http://schema.example.org/socialgraph/resource-descriptor/socialGraphType>.
+socialgraph:CustomerType rdfs:isDefinedBy <http://schema.example.org/socialgraph/resource-descriptor/socialGraphType>.
+socialgraph:Customer rdfs:isDefinedBy <http://schema.example.org/socialgraph/resource-descriptor/socialGraphType>.
+socialgraph:customerId rdfs:isDefinedBy <http://schema.example.org/socialgraph/resource-descriptor/socialGraphType>.
 socialgraph:CustomerType sh:property _:sk_0.
 socialgraph:PersonType sh:property _:sk_4.
 socialgraph:PersonType sh:property _:sk_5.

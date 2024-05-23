@@ -16,7 +16,9 @@ PREFIX socialgraph: <http://schema.example.org/socialgraph/>
   ?graphType a :GraphType ;
     :namespace ?ns .
 
-  ?s log:namespace ?ns ;
+  ?nsX string:startsWith ?ns .
+  
+  ?s log:namespace ?nsX ;
     ?p ?o .
 }
 =>
